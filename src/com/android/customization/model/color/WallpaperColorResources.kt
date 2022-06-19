@@ -2,8 +2,6 @@ package com.android.customization.model.color
 
 import android.annotation.ColorInt
 import android.app.WallpaperColors
-import android.content.Context
-import android.provider.Settings
 import android.util.SparseIntArray
 
 import dev.kdrag0n.colorkt.Color
@@ -16,7 +14,7 @@ import dev.kdrag0n.colorkt.ucs.lab.CieLab
 import dev.kdrag0n.monet.theme.DynamicColorScheme
 import dev.kdrag0n.monet.theme.MaterialYouTargets
 
-class WallpaperColorResources(wallpaperColors: WallpaperColors, context: Context) {
+class WallpaperColorResources(wallpaperColors: WallpaperColors) {
     val colorOverlay = SparseIntArray()
 
     private val cond = Zcam.ViewingConditions(
@@ -40,19 +38,9 @@ class WallpaperColorResources(wallpaperColors: WallpaperColors, context: Context
 
     init {
         // Generate color scheme
-        val colorOverride = Settings.Secure.getInt(
-            context.contentResolver,
-            "monet_engine_color_override",
-            -1
-        )
-        val seedColor = if (colorOverride != -1) {
-            colorOverride
-        } else {
-            wallpaperColors.primaryColor.toArgb()
-        }
         val colorScheme = DynamicColorScheme(
             targets = targets,
-            seedColor = Srgb(seedColor),
+            seedColor = Srgb(wallpaperColors.primaryColor.toArgb()),
             chromaFactor = 1.0,
             cond = cond,
             accurateShades = true,
